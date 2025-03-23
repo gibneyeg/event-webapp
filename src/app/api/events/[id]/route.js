@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/app/lib/prisma';
+import prisma from '@/lib/prisma';
 
 // GET /api/events/[id] - Get a single event
 export async function GET(request, { params }) {
