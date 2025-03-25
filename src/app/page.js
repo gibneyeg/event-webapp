@@ -12,6 +12,11 @@ export default function Home() {
             Create New Event
           </button>
         </Link>
+        <Link href="/events/new">
+          <button style={{ padding: '12px 24px', fontSize: '18px', borderRadius: '24px' }}>
+            login
+          </button>
+        </Link>
       </div>
       
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginTop: '48px' }}>
