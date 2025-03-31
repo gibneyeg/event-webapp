@@ -63,18 +63,18 @@ export default function EventsPage() {
 
   const handleDeleteEvent = async (eventId) => {
     if (!user) return; 
-    
+
     if (confirm('Are you sure you want to delete this event?')) {
       try {
         const response = await fetch(`/api/events/${eventId}?userId=${user.id}`, {
           method: 'DELETE',
         });
-        
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || 'Failed to delete event');
         }
-        
+
         // Refresh the events list after deletion
         fetchEvents();
       } catch (err) {
@@ -86,84 +86,63 @@ export default function EventsPage() {
 
   // If not logged in, show message
   if (!user) {
-    return <div style={{ textAlign: 'center', marginTop: '20px' }}>Please log in to view your events</div>;
+    return (
+      <div className="text-center mt-4">
+        Please log in to view your events
+      </div>
+    );
   }
 
   return (
-    <div>
-      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>My Events</h1>
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="h3 text-info">My Events</h1>
         <Link href="/events/new">
-          <button style={{ 
-            padding: '8px 16px', 
-            backgroundColor: '#0d6efd', 
-            color: 'white', 
-            border: 'none', 
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}>
-            Create New Event
-          </button>
+          <button className="btn btn-primary">Create New Event</button>
         </Link>
       </div>
-      
+
       {error && (
-        <div style={{ 
-          backgroundColor: '#f8d7da', 
-          color: '#721c24', 
-          padding: '12px', 
-          borderRadius: '4px', 
-          marginBottom: '16px',
-          border: '1px solid #f5c6cb'
-        }}>
+        <div className="alert alert-danger mb-4">
           {error}
         </div>
       )}
-      
+
       {loading ? (
         <p>Loading events...</p>
       ) : events.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '32px 0' }}>
-          <p style={{ fontSize: '20px' }}>No events found</p>
-          <p style={{ marginTop: '8px' }}>Create your first event to get started</p>
+        <div className="text-center py-4">
+          <p className="fs-5">No events found</p>
+          <p>Create your first event to get started</p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="row g-3">
           {events.map(event => (
-            <div key={event.id} style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '4px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold' }}>{event.title}</h2>
-              <p style={{ color: '#666' }}>{event.description || 'No description provided'}</p>
-              <p style={{ marginTop: '8px' }}>
-                <strong>Location:</strong> {event.location || 'No location specified'}
-              </p>
-              <p>
-                <strong>Start:</strong> {formatDate(event.startDate)}
-              </p>
-              {event.endDate && (
-                <p>
-                  <strong>End:</strong> {formatDate(event.endDate)}
-                </p>
-              )}
-              <div style={{ marginTop: '12px' }}>
-                <Link href={`/events/${event.id}?userId=${user.id}`} style={{ marginRight: '12px', color: '#4169e1' }}>
-                  View
-                </Link>
-                <Link href={`/events/${event.id}/edit?userId=${user.id}`} style={{ marginRight: '12px', color: '#28a745' }}>
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDeleteEvent(event.id)}
-                  style={{ 
-                    backgroundColor: 'transparent', 
-                    color: '#dc3545', 
-                    padding: '0', 
-                    margin: '0',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Delete
-                </button>
+            <div key={event.id} className="col-md-6">
+              <div className="card shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title">{event.title}</h5>
+                  <p className="card-text text-muted">{event.description || 'No description provided'}</p>
+                  <p><strong>Location:</strong> {event.location || 'No location specified'}</p>
+                  <p><strong>Start:</strong> {formatDate(event.startDate)}</p>
+                  {event.endDate && (
+                    <p><strong>End:</strong> {formatDate(event.endDate)}</p>
+                  )}
+                  <div className="mt-3 d-flex gap-2">
+                    <Link href={`/events/${event.id}?userId=${user.id}`} className="btn btn-link text-primary">
+                      View
+                    </Link>
+                    <Link href={`/events/${event.id}/edit?userId=${user.id}`} className="btn btn-link text-success">
+                      Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDeleteEvent(event.id)}
+                      className="btn btn-link text-danger"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}

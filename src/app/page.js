@@ -49,7 +49,7 @@ export default function Home() {
   return (
     <div>
       <div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light bg-*">
           <a className="navbar-brand" href="#">
             {/* Use regular img tag if Image is causing issues */}
             <img src="/avatars/logo.png" alt="Logo" width={40} height={40} />
