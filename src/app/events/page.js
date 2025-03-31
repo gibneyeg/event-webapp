@@ -6,6 +6,20 @@ export default function EventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Get user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error('Error parsing user from localStorage:', e);
+        localStorage.removeItem('user');
+      }
+    }
+  }, []);
 
   // Function to format dates properly
   const formatDate = (dateString) => {
@@ -18,12 +32,14 @@ export default function EventsPage() {
     }
   };
 
-  // Function to fetch events from API
+  // Function to fetch events from API - now includes user ID
   const fetchEvents = async () => {
+    if (!user) return; 
+    
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/events');
+      const response = await fetch(`/api/events?userId=${user.id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch events');
       }
@@ -38,21 +54,25 @@ export default function EventsPage() {
     }
   };
 
-  // Fetch events when component mounts
+  // Fetch events when user is set
   useEffect(() => {
-    fetchEvents();
-  }, []);
+    if (user) {
+      fetchEvents();
+    }
+  }, [user]);
 
-  // Handle event deletion
   const handleDeleteEvent = async (eventId) => {
+    if (!user) return; 
+    
     if (confirm('Are you sure you want to delete this event?')) {
       try {
-        const response = await fetch(`/api/events/${eventId}`, {
+        const response = await fetch(`/api/events/${eventId}?userId=${user.id}`, {
           method: 'DELETE',
         });
         
         if (!response.ok) {
-          throw new Error('Failed to delete event');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to delete event');
         }
         
         // Refresh the events list after deletion
@@ -64,10 +84,15 @@ export default function EventsPage() {
     }
   };
 
+  // If not logged in, show message
+  if (!user) {
+    return <div style={{ textAlign: 'center', marginTop: '20px' }}>Please log in to view your events</div>;
+  }
+
   return (
     <div>
       <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>Events</h1>
+        <h1 style={{ fontSize: '30px', fontWeight: 'bold' }}>My Events</h1>
         <Link href="/events/new">
           <button style={{ 
             padding: '8px 16px', 
@@ -120,10 +145,10 @@ export default function EventsPage() {
                 </p>
               )}
               <div style={{ marginTop: '12px' }}>
-                <Link href={`/events/${event.id}`} style={{ marginRight: '12px', color: '#4169e1' }}>
+                <Link href={`/events/${event.id}?userId=${user.id}`} style={{ marginRight: '12px', color: '#4169e1' }}>
                   View
                 </Link>
-                <Link href={`/events/${event.id}/edit`} style={{ marginRight: '12px', color: '#28a745' }}>
+                <Link href={`/events/${event.id}/edit?userId=${user.id}`} style={{ marginRight: '12px', color: '#28a745' }}>
                   Edit
                 </Link>
                 <button
@@ -147,6 +172,3 @@ export default function EventsPage() {
     </div>
   );
 }
-
-
-
