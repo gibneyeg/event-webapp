@@ -21,13 +21,28 @@ export default function EventForm({ event, formAction }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // For now, just showing data submitted
-    alert('Form would submit: ' + JSON.stringify(formData, null, 2));
-    
-    // will eventually add form submission
-
-  };
+    try {
+      const response = await fetch('/api/events/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        alert('Form submitted successfully!');
+        router.push('/events');
+      } else {
+        const errorData = await response.json();
+        console.error('Error:', errorData);
+        alert('Failed to submit form.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred.');
+    }
+  };  
 
   return (
     <form onSubmit={handleSubmit} style={{ maxWidth: '500px' }}>
