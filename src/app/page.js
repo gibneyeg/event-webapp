@@ -1,18 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import Header from './components/Header';
 
 export default function Home() {
-  const router = useRouter();
   const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   
   // Check if user is logged in when component mounts
   useEffect(() => {
-    // Check localStorage for user data
     const checkAuth = () => {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
@@ -23,14 +20,12 @@ export default function Home() {
           localStorage.removeItem('user');
         }
       }
-      setIsLoading(false);
+      setLoading(false);
     };
     
-    // Run the check
     checkAuth();
     
     // Also set up an event listener for storage changes
-    // This helps when login/logout happens in another tab
     window.addEventListener('storage', checkAuth);
     
     return () => {
@@ -38,102 +33,192 @@ export default function Home() {
     };
   }, []);
 
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    // Instead of redirecting, just update the state
-    // This will cause the UI to show the login/signup links
-  };
-
   return (
-    <div>
-      <div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-*">
-          <a className="navbar-brand" href="#">
-            {/* Use regular img tag if Image is causing issues */}
-            <img src="/avatars/logo.png" alt="Logo" width={40} height={40} />
-          </a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mx-auto">
-              <li className="nav-item">
-                <Link href="/" className="btn btn-secondary">Home</Link>
-              </li>
-              <li className="nav-item">
-                <Link href="/events" className="btn btn-secondary">Events</Link>
-              </li>
-              <li className="nav-item">
-                <Link href="#" className="btn btn-secondary">Rainbow 6</Link>
-              </li>
-            </ul>
-
-            <ul className="navbar-nav ml-auto">
-              {!isLoading && (
-                user ? (
-                  <>
-                    <li className="nav-item">
-                      <span className="nav-link">Welcome, {user.name || user.email}</span>
-                    </li>
-                    <li className="nav-item">
-                      <button 
-                        onClick={handleLogout}
-                        className="nav-link btn btn-link"
-                        style={{ cursor: 'pointer' }}
-                      >
-                        Sign Out
-                      </button>
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li className="nav-item active">
-                      <Link href="/signup" className="nav-link">Sign Up</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link href="/login" className="nav-link">Sign In</Link>
-                    </li>
-                  </>
-                )
-              )}
-            </ul>
-          </div>
-        </nav>
-      </div>
-      <div style={{ textAlign: 'center', margin: '40px 0' }}>
-        <h1 className="text-danger" style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '24px' }}>Welcome to Event Creator</h1>
-        <p style={{ fontSize: '20px', marginBottom: '32px' }}>Create and manage your events in one place</p>
-        
-        <Link href="/events/new">
-          <button className="btn btn-info" style={{ padding: '12px 24px', fontSize: '18px', borderRadius: '24px' }}>
-            Create New Event
-          </button>
-        </Link>
-        <Link href="/events">
-          <button className="btn btn-info" style={{ padding: '12px 24px', fontSize: '18px', borderRadius: '24px', marginLeft: '10px' }}>
-            View Events
-          </button>
-        </Link>
-      </div>
+    <div className="home-container">
+      <Header />
       
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginTop: '48px' }}>
-        <div style={{ border: '1px solid #ddd', padding: '24px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>Manage Events</h2>
-          <p style={{ marginBottom: '16px' }}>View, edit, and delete your existing events.</p>
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="hero-content">
+          <h1 className="hero-title">Welcome to Event Creator</h1>
+          <p className="hero-description">Create and manage your events in one place</p>
+          
+          <div className="hero-actions">
+            <Link href="/events/new">
+              <button className="primary-button">Create New Event</button>
+            </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* Features Section */}
+      <section className="features">
+        <div className="feature-card">
+          <h2 className="feature-title">Manage Events</h2>
+          <p className="feature-description">View, edit, and delete your existing events.</p>
           <Link href="/events">
-            <button className="btn btn-secondary">
-              View Events
-            </button>
+            <button className="text-button">View Events →</button>
           </Link>
         </div>
         
-        <div style={{ border: '1px solid #ddd', padding: '24px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>EVENTS APPPPPP</h2>
+        <div className="feature-card">
+          <h2 className="feature-title">Event Planning</h2>
+          <p className="feature-description">Organize your event schedule, invite guests, and track attendance.</p>
+          <Link href="/events/new">
+            <button className="text-button">Create Event →</button>
+          </Link>
         </div>
-      </div>
+      </section>
+      
+      {/* Styles */}
+      <style jsx>{`
+        .home-container {
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          background-color: #f5f5f5;
+        }
+        
+        .hero {
+          padding: 64px 24px;
+          background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/backdrop.jpg');
+          background-size: cover;
+          background-position: center;
+          color: white;
+          text-align: center;
+        }
+        
+        .hero-content {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        
+        .hero-title {
+          font-size: 48px;
+          font-weight: 700;
+          margin-bottom: 16px;
+          color: white;
+        }
+        
+        .hero-description {
+          font-size: 20px;
+          margin-bottom: 32px;
+          opacity: 0.9;
+        }
+        
+        .hero-actions {
+          display: flex;
+          gap: 16px;
+          justify-content: center;
+        }
+        
+        .primary-button {
+          background-color: #00bcd4;
+          color: white;
+          border: none;
+          padding: 12px 24px;
+          font-size: 16px;
+          border-radius: 30px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .primary-button:hover {
+          background-color: #00a5b8;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .secondary-button {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: white;
+          border: 1px solid white;
+          padding: 12px 24px;
+          font-size: 16px;
+          border-radius: 30px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        
+        .secondary-button:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .features {
+          padding: 64px 24px;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 32px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        
+        .feature-card {
+          background-color: white;
+          padding: 32px;
+          border-radius: 12px;
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-title {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 16px;
+          color: #333;
+        }
+        
+        .feature-description {
+          color: #666;
+          margin-bottom: 24px;
+          line-height: 1.5;
+        }
+        
+        .text-button {
+          background: none;
+          border: none;
+          color: #00bcd4;
+          font-weight: 600;
+          padding: 0;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          transition: color 0.2s;
+        }
+        
+        .text-button:hover {
+          color: #0097a7;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .hero-title {
+            font-size: 36px;
+          }
+          
+          .hero-description {
+            font-size: 18px;
+          }
+          
+          .hero-actions {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .primary-button, .secondary-button {
+            width: 100%;
+            max-width: 300px;
+          }
+        }
+      `}</style>
     </div>
   );
 }

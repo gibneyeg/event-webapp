@@ -88,7 +88,12 @@ export default function EventsPage() {
   if (!user) {
     return (
       <div className="text-center mt-4">
-        Please log in to view your events
+        <p>Please log in to view your events</p>
+        <Link href="/login">
+          <button className="btn-submit mt-2">
+            Sign In
+          </button>
+        </Link>
       </div>
     );
   }
