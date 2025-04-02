@@ -38,17 +38,12 @@ export default function Home() {
     <div className="home-container">
       <Header />
       
-      {/* Hero Section */}
+      {/* Hero Section - Now with increased height */}
       <section className="hero">
         <div className="hero-content">
           <h1 className="hero-title">Welcome to Event Creator</h1>
           <p className="hero-description">Create and manage your events in one place</p>
-          
-          <div className="hero-actions">
-            <Link href="/events/new">
-              <button className="primary-button">Create New Event</button>
-            </Link>
-          </div>
+         
         </div>
       </section>
       
@@ -81,12 +76,16 @@ export default function Home() {
         }
         
         .hero {
-          padding: 64px 24px;
+          padding: 120px 24px; /* Increased from 64px to 120px for more height */
+          min-height: 500px; /* Added minimum height */
           background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/backdrop.jpg');
           background-size: cover;
           background-position: center;
           color: white;
           text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         
         .hero-content {
@@ -97,13 +96,13 @@ export default function Home() {
         .hero-title {
           font-size: 48px;
           font-weight: 700;
-          margin-bottom: 16px;
+          margin-bottom: 24px; /* Increased from 16px */
           color: white;
         }
         
         .hero-description {
-          font-size: 20px;
-          margin-bottom: 32px;
+          font-size: 22px; /* Increased from 20px */
+          margin-bottom: 40px; /* Increased from 32px */
           opacity: 0.9;
         }
         
@@ -111,14 +110,15 @@ export default function Home() {
           display: flex;
           gap: 16px;
           justify-content: center;
+          margin-top: 20px; /* Added margin top */
         }
         
         .primary-button {
           background-color: #00bcd4;
           color: white;
           border: none;
-          padding: 12px 24px;
-          font-size: 16px;
+          padding: 14px 28px; /* Increased from 12px 24px */
+          font-size: 18px; /* Increased from 16px */
           border-radius: 30px;
           font-weight: 600;
           cursor: pointer;
@@ -136,8 +136,8 @@ export default function Home() {
           background-color: rgba(255, 255, 255, 0.2);
           color: white;
           border: 1px solid white;
-          padding: 12px 24px;
-          font-size: 16px;
+          padding: 14px 28px; /* Increased from 12px 24px */
+          font-size: 18px; /* Increased from 16px */
           border-radius: 30px;
           font-weight: 600;
           cursor: pointer;
@@ -201,6 +201,11 @@ export default function Home() {
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
+          .hero {
+            padding: 80px 24px; /* Still increased but slightly less on mobile */
+            min-height: 400px; /* Smaller min-height on mobile */
+          }
+          
           .hero-title {
             font-size: 36px;
           }
