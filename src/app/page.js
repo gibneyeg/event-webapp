@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Header from './components/Header';
+import React from 'react';
 
 export default function Home() {
   const [user, setUser] = useState(null);

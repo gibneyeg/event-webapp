@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^6.5.0",
@@ -14,16 +15,24 @@
     "bcryptjs": "^3.0.2",
     "bootstrap": "^5.3.3",
     "date-fns": "^4.1.0",
+    "jest": "^29.7.0",
     "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
     "next": "15.2.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
     "@eslint/eslintrc": "^3",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
+    "jest-environment-jsdom": "^29.7.0",
     "prisma": "^6.5.0"
   }
 }
