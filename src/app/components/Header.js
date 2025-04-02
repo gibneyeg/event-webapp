@@ -83,9 +83,7 @@ const Header = () => {
           <li className="nav-item">
             <button onClick={() => router.push('/events')} className="nav-button">Events</button>
           </li>
-          <li className="nav-item">
-            <button onClick={() => router.push('/events/new')} className="nav-button">Create Event</button>
-          </li>
+
         </ul>
       </div>
       

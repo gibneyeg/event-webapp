@@ -78,7 +78,7 @@ export default function EventForm({ event, formAction }) {
       <Header />
       
       <div className="event-form-container">
-        <h1 className="page-title">Create New Event</h1>
+        <h1 className="page-title">89Event</h1>
         
         {error && (
           <div className="error-message">
