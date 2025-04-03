@@ -51,8 +51,61 @@ describe('Signup intergation test', () => {
     //assert navigation with a delay
     await new Promise((resolve) => setTimeout(resolve, 3000));
     await waitFor(() => {
-    expect(mockPush).toHaveBeenCalledWith('/login');
+        expect(mockPush).toHaveBeenCalledWith('/login');
     });
   });
 });
 
+describe('Signup validation tests', () => {
+  it('should fail when password is less than 6 characters', async () => {
+    render(<SignupForm />);
+
+    // Simulate user input
+    fireEvent.change(screen.getByPlaceholderText('Enter your full name'), {
+      target: { value: 'John Fortnite' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
+      target: { value: 'john.Fortnite@epic.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Create a password'), {
+      target: { value: 'pass' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
+      target: { value: 'pass' },
+    });
+
+    //submit the form
+    fireEvent.click(screen.getByText('Create account'));
+
+    //assert error message
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Password must be at least 6 characters');
+    });
+  });
+
+  it('should fail when password is not the same', async () => {
+    render(<SignupForm />);
+
+    //simulate user input
+    fireEvent.change(screen.getByPlaceholderText('Enter your full name'), {
+      target: { value: 'John Fortnite' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), {
+      target: { value: 'john.Fortnite@epic.com' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Create a password'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.change(screen.getByPlaceholderText('Confirm your password'), {
+      target: { value: 'password1234' },
+    });
+
+    //submit the form
+    fireEvent.click(screen.getByText('Create account'));
+
+    //assert error message
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toHaveTextContent('Passwords do not match');
+    });
+  });
+});
