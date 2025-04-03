@@ -78,7 +78,7 @@ export default function Home() {
         .hero {
           padding: 120px 24px; /* Increased from 64px to 120px for more height */
           min-height: 500px; /* Added minimum height */
-          background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/backdrop.jpg');
+          background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));
           background-size: cover;
           background-position: center;
           color: white;
