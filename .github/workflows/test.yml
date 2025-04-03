@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      # PostgreSQL for E2E tests
+      # Setup PostgreSQL for tests
       postgres:
         image: postgres:14
         env:
@@ -42,6 +42,9 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
       
+      - name: Run linting
+        run: npm run lint
+      
       - name: Run unit tests
         run: npm test
         
@@ -50,19 +53,50 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/event_app_test
           
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      # Build the application
+      - name: Build application
+        run: npm run build
         
+      # Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npm run e2e:install
+        
+      # Create a temporary Playwright config for CI
+      - name: Create CI-specific Playwright config
+        run: |
+          cat > playwright.config.ci.js << EOF
+          import { defineConfig, devices } from '@playwright/test';
+          export default defineConfig({
+            testDir: './e2e/specs',
+            fullyParallel: true,
+            forbidOnly: true,
+            retries: 2,
+            workers: 1,
+            reporter: 'github',
+            use: {
+              baseURL: 'http://localhost:3000',
+              trace: 'on-first-retry',
+              screenshot: 'only-on-failure',
+            },
+            projects: [
+              {
+                name: 'chromium',
+                use: { ...devices['Desktop Chrome'] },
+              }
+            ],
+            webServer: {
+              command: 'npm run start',
+              url: 'http://localhost:3000',
+              reuseExistingServer: false,
+              timeout: 120000,
+            },
+          });
+          EOF
+        
+      # Run E2E tests with the CI config
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: npx playwright test --config=playwright.config.ci.js
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/event_app_test
-          
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: |
-            playwright-report/
-            test-results/
+          NODE_ENV: production
+          CI: true
