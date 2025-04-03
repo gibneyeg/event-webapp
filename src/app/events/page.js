@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
+import Header from '../components/Header';
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -99,7 +99,7 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="container mt-4">
+    <><Header /><div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="h3 text-info">My Events</h1>
         <Link href="/events/new">
@@ -134,12 +134,6 @@ export default function EventsPage() {
                     <p><strong>End:</strong> {formatDate(event.endDate)}</p>
                   )}
                   <div className="mt-3 d-flex gap-2">
-                    <Link href={`/events/${event.id}?userId=${user.id}`} className="btn btn-link text-primary">
-                      View
-                    </Link>
-                    <Link href={`/events/${event.id}/edit?userId=${user.id}`} className="btn btn-link text-success">
-                      Edit
-                    </Link>
                     <button
                       onClick={() => handleDeleteEvent(event.id)}
                       className="btn btn-link text-danger"
@@ -153,6 +147,6 @@ export default function EventsPage() {
           ))}
         </div>
       )}
-    </div>
+    </div></>
   );
 }
