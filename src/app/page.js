@@ -64,7 +64,7 @@ export default function Home() {
             <button className="text-button">Create Event →</button>
           </Link>
         </div>
-        asdasdasdasd
+        asdasdasdasdzsdcfhdfJDFadf
       </section>
       
       {/* Styles */}
