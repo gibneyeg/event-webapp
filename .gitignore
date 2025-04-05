@@ -53,4 +53,3 @@ server.js
 certs/
 # Additional files to ignore
 11.2.0
-prisma/schema.prisma:*
