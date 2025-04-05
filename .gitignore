@@ -46,3 +46,11 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+
+# Server-specific files
+server.js
+certs/
+# Additional files to ignore
+11.2.0
+prisma/schema.prisma:*
