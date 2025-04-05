@@ -13,8 +13,8 @@ git reset --hard HEAD
 # Pull latest changes
 git pull origin main
 
-# Install dependencies
-npm ci
+# Install dependencies with npm install instead of npm ci
+npm install --no-audit --no-fund
 
 # Set up environment variables
 echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/event_app_prod" > .env
@@ -24,7 +24,6 @@ npx prisma generate
 
 # Build the application
 npm run build
-
 
 # Restart the application with PM2
 pm2 restart event-webapp || pm2 start npm --name "event-webapp" -- start
