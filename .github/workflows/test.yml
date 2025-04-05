@@ -1,4 +1,4 @@
-name: Test Suite
+name: Test and Deploy
 
 on:
   push:
@@ -100,3 +100,47 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/event_app_test
           NODE_ENV: production
           CI: true
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Setup known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ec2-3-220-149-40.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+      
+      - name: Deploy to EC2
+        run: |
+          ssh ubuntu@ec2-3-220-149-40.compute-1.amazonaws.com << 'EOF'
+            # Navigate to the project directory
+            cd ~/event-webapp
+            
+            # Pull latest changes
+            git pull origin main
+            
+            # Install dependencies
+            npm ci
+            
+            # Generate Prisma client
+            npx prisma generate
+            
+            # Build the application
+            npm run build
+            
+            # Restart the application with PM2
+            pm2 restart event-webapp || pm2 start npm --name "event-webapp" -- start
+            
+            # Save PM2 state
+            pm2 save
+          EOF
