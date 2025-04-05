@@ -12,19 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.7.0
+      - name: Setup SSH key
+        uses: shimataro/ssh-key-action@v2
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-      - name: Setup known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ec2-3-220-149-40.compute-1.amazonaws.com >> ~/.ssh/known_hosts
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          if_key_exists: replace
       
       - name: Deploy to EC2
         run: |
-          ssh ubuntu@ec2-3-220-149-40.compute-1.amazonaws.com << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@ec2-3-220-149-40.compute-1.amazonaws.com << 'EOF'
             # Navigate to the project directory
             cd ~/event-webapp
             
@@ -46,13 +42,10 @@ jobs:
             # Generate Prisma client
             npx prisma generate
             
-            # Run migrations if needed (this might require additional configuration)
-            # npx prisma migrate deploy
-            
             # Build the application
             npm run build
             
-          
+
             
             # Ensure certs directory exists
             mkdir -p ~/event-webapp/certs
