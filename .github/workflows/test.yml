@@ -1,4 +1,4 @@
-name: Test Suite
+name: Test and Deploy
 
 on:
   push:
@@ -100,3 +100,26 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/event_app_test
           NODE_ENV: production
           CI: true
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+          chmod 600 ~/.ssh/config
+      
+      - name: Deploy to EC2
+        run: ssh ubuntu@ec2-3-220-149-40.compute-1.amazonaws.com 'bash -s' < ./deploy.sh
