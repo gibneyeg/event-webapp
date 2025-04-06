@@ -51,7 +51,7 @@ export default function Home() {
       <section className="features">
         <div className="feature-card">
           <h2 className="feature-title">Manage Events</h2>
-          <p className="feature-description">View, edit, and delete your existing events.</p>
+          <p className="feature-description">View and delete your existing events.</p>
           <Link href="/events">
             <button className="text-button">View Events →</button>
           </Link>
