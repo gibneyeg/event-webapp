@@ -59,7 +59,7 @@ export default function Home() {
         
         <div className="feature-card">
           <h2 className="feature-title">Event Planning</h2>
-          <p className="feature-description">Organize your event schedule, invite guests, and track attendance.</p>
+          <p className="feature-description">Create a new events</p>
           <Link href="/events/new">
             <button className="text-button">Create Event →</button>
           </Link>
