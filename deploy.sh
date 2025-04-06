@@ -33,7 +33,3 @@ npm run build
 
 # Restart the application with PM2
 pm2 restart event-webapp || pm2 start npm --name "event-webapp" -- start
-
-# Save PM2 state
-pm2 save
-echo "DEPLOY: Deployment completed successfully at $(date)"
