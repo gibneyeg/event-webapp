@@ -6,6 +6,9 @@ set -e
 # Navigate to the project directory
 cd ~/event-webapp
 
+
+git reset --hard origin/main
+
 # Pull latest changes
 git pull origin main
 

@@ -31,7 +31,6 @@ const Header = () => {
   
   // On mount, check if user is stored in localStorage
   useEffect(() => {
-    // Define checkAuth inside useEffect so it's in scope for cleanup
     const checkAuth = () => {
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
@@ -42,7 +41,6 @@ const Header = () => {
           localStorage.removeItem('user');
         }
       } else {
-        // Ensure user is null if no valid user in localStorage
         setUser(null);
       }
       setIsLoading(false);
@@ -52,11 +50,11 @@ const Header = () => {
     const timeoutId = setTimeout(() => {
       checkAuth();
       window.addEventListener('storage', checkAuth);
-    }, 100); // Short delay to ensure stable layout
+    }, 100); 
     
     return () => {
       clearTimeout(timeoutId);
-      window.removeEventListener('storage', checkAuth); // Now checkAuth is in scope here
+      window.removeEventListener('storage', checkAuth); 
     };
   }, []);
   
@@ -66,18 +64,14 @@ const Header = () => {
       // First remove from localStorage
       localStorage.removeItem('user');
       
-      // Then update the state
       setUser(null);
       
-      // Small delay to ensure state updates are processed
       setTimeout(() => {
-        // Navigate to login page
         router.push('/login');
       }, 50);
     } catch (error) {
       console.error('Logout error:', error);
-      // Fallback direct navigation if something fails
-      window.location.href = '/login';
+
     }
   };
 
@@ -85,12 +79,12 @@ const Header = () => {
     <nav className="main-header">
       {/* Left side - Logo */}
       <div className="header-left">
-        <div className="logo-container">
-          <Link href="/">
-            <div className="logo">EC</div>
-          </Link>
-        </div>
-      </div>
+  <div className="logo-container">
+    <Link href="/">
+      <img src="/Logo.jpg" className="logo" />
+    </Link>
+  </div>
+</div>
       
       {/* Center - Navigation Links */}
       <div className="header-center">
