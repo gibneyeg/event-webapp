@@ -41,6 +41,9 @@ const Header = () => {
           console.error('Error parsing user from localStorage:', e);
           localStorage.removeItem('user');
         }
+      } else {
+        // Ensure user is null if no valid user in localStorage
+        setUser(null);
       }
       setIsLoading(false);
     };
@@ -57,11 +60,25 @@ const Header = () => {
     };
   }, []);
   
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    router.push('/login');
+  // Handle logout with a more reliable approach
+  const handleLogout = async () => {
+    try {
+      // First remove from localStorage
+      localStorage.removeItem('user');
+      
+      // Then update the state
+      setUser(null);
+      
+      // Small delay to ensure state updates are processed
+      setTimeout(() => {
+        // Navigate to login page
+        router.push('/login');
+      }, 50);
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Fallback direct navigation if something fails
+      window.location.href = '/login';
+    }
   };
 
   return (
@@ -84,7 +101,6 @@ const Header = () => {
           <li className="nav-item">
             <button onClick={() => router.push('/events')} className="nav-button">Events</button>
           </li>
-
         </ul>
       </div>
       
